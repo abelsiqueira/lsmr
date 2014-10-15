@@ -7,12 +7,13 @@
 
 AR = ar rv
 LIBNAME = liblsmr.a
+DEBUG = -g
 
 FC      =  gfortran
-FFLAGS  = -O
+FFLAGS  = -O $(DEBUG)
 
 CC      =  gcc
-CFLAGS  = -O -Wall -Wextra
+CFLAGS  = -O -Wall -Wextra $(DEBUG)
 
 .SUFFIXES:
 .SUFFIXES: .c .f .f90 .o
@@ -22,13 +23,21 @@ CFLAGS  = -O -Wall -Wextra
 .c.o:;   $(CC) $(CFLAGS) -c -o $@ $<
 
 OBJS = lsmrDataModule.o lsmrModule.o lsmrCheckModule.o
-TESTOBJS = lsmrTestModule.o lsmrTestProgram.o
 
-lib: ${OBJS}
+TESTOBJS = lsmrTestModule.o lsmrTestProgram.o
+LSMRSMALLTEST = lsmrSmallLSTest.o
+
+lib: $(LIBNAME)
+
+$(LIBNAME): ${OBJS}
 	$(AR) $(LIBNAME) $(OBJS)
 
-TestProgram: lib ${TESTOBJS}
+TestProgram: $(LIBNAME) ${TESTOBJS}
 	${FC} ${FFLAGS} -o $@ ${TESTOBJS} $(LIBNAME)
+	./$@
+
+smalltests: lib $(LSMRSMALLTEST)
+	${FC} ${FFLAGS} -o SmallLSTest $(LSMRSMALLTEST) $(LIBNAME)
 
 clean:
 	\rm -f *.o *.mod $(LIBNAME)
