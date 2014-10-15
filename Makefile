@@ -7,10 +7,10 @@
 
 SUBMAKES = $(dir $(shell ls */Makefile))
 
-all: lib test
+all: lib tests
 
-.PHONY: lib test
-lib test:
+.PHONY: lib tests
+lib tests:
 	$(MAKE) -C $@ all
 
 clean purge:
