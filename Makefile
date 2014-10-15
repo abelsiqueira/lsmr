@@ -1,29 +1,34 @@
 # Makefile for F90 version of LSMR.
 # Maintained by Michael Saunders <saunders@stanford.edu>
+# Updated by Abel Soares Siqueira <abel.s.siqueira@gmail.com>
 #
 # 16 Jul 2010: LSMR version derived from LSQR equivalent.
+# 15 Oct 2014: Updated to use git. See git log for further information
 
-  FC      =  gfortran
-  FFLAGS  = -g -O
-# FFLAGS  = -g -O0 -pedantic -Wall -Wextra -fbounds-check -ftrace=full
+AR = ar rv
+LIBNAME = liblsmr.a
 
-  CC      =  gcc
-  CFLAGS  = -g -O
+FC      =  gfortran
+FFLAGS  = -O
 
-# Clear suffix list, then define the ones we want
-  .SUFFIXES:
-  .SUFFIXES: .c .f .f90 .o
+CC      =  gcc
+CFLAGS  = -O -Wall -Wextra
 
-  .f90.o:; ${FC} ${FFLAGS} -c -o $@ $<
-  .f.o:;   ${FC} ${FFLAGS} -c -o $@ $<
-  .c.o:;   $(CC) $(CFLAGS) -c -o $@ $<
+.SUFFIXES:
+.SUFFIXES: .c .f .f90 .o
 
-  files = lsmrDataModule.o                                       \
-          lsmrModule.o     lsmrCheckModule.o lsmrTestModule.o    \
-          lsmrTestProgram.o
+.f90.o:; ${FC} ${FFLAGS} -c -o $@ $<
+.f.o:;   ${FC} ${FFLAGS} -c -o $@ $<
+.c.o:;   $(CC) $(CFLAGS) -c -o $@ $<
 
-TestProgram: ${files}
-	${FC} ${FFLAGS} -o $@ ${files}
+OBJS = lsmrDataModule.o lsmrModule.o lsmrCheckModule.o
+TESTOBJS = lsmrTestModule.o lsmrTestProgram.o
+
+lib: ${OBJS}
+	$(AR) $(LIBNAME) $(OBJS)
+
+TestProgram: lib ${TESTOBJS}
+	${FC} ${FFLAGS} -o $@ ${TESTOBJS} $(LIBNAME)
 
 clean:
-	\rm -f *.o *.mod
+	\rm -f *.o *.mod $(LIBNAME)
