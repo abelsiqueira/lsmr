@@ -3,3 +3,4 @@ TestProgram
 SmallLSTest
 *.mod
 *.[oa]
+*.tst
