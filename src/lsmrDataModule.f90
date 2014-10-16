@@ -46,16 +46,18 @@ contains
   subroutine fortran_open( funit, output, status ) bind (c, name="fortran_open")
     use iso_c_binding
     implicit none
-    integer :: funit, status, i
+    integer :: funit, status, i, nchars
     character(len=1,kind=C_CHAR) :: output(10)
     character(len=:), allocatable :: fname
 
-
     do i = 1, 10
-      if (output(i) == C_NULL_CHAR) exit
+      if (output(i) == C_NULL_CHAR) then
+        nchars = i-1
+        exit
+      end if
     enddo
-    allocate(character(len=i-1) :: fname)
-    fname = transfer(output(1:i-1), fname)
+    allocate(character(len=nchars) :: fname)
+    fname = transfer(output(1:nchars), fname)
 
     write(*,*) fname
     open(funit, file = fname, status = 'UNKNOWN', ERR = 900)
