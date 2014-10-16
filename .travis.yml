@@ -1,0 +1,9 @@
+language: c
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y gfortran
+install: make lib
+script: make tests
+notifications:
+  email:
+    on_success: always
