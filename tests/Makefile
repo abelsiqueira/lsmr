@@ -27,7 +27,7 @@ $(F90TESTS): %: %.f90
 
 $(CTESTS): %: %.c
 	@echo -e "\033[0;32mCompiling $@\033[0m"
-	${CC} ${CFLAGS} -o $@.tst $@.c -I../lib ../lib/$(LIBNAME) -lgfortran
+	${CC} ${CFLAGS} -o $@.tst $@.c -I../lib ../lib/$(LIBNAME) $(CXTRA)
 
 clean purge:
-	rm -f *.o *.mod $(patsubst %,%.tst,$(TESTS))
+	rm -f *.o *.mod LSMR.txt $(patsubst %,%.tst,$(TESTS))
