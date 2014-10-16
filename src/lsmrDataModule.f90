@@ -59,7 +59,6 @@ contains
     enddo
     fname = transfer(output(1:nchars), fname)
 
-    write(*,*) fname
     open(funit, file = fname, status = 'UNKNOWN', ERR = 900)
     status = 0
     return

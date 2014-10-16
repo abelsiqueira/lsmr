@@ -1,13 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-// From LSMR
-typedef void (*Aprod_pointer) (int *, int *, double *, double *);
-void lsmr(int *, int *, Aprod_pointer, Aprod_pointer, double *, double *, double
-    *, double *, double *, int *, int *, int *, double *, int *, int *, double
-    *, double *, double *, double *, double *);
-void fortran_open(int *, char *, int *);
-void fortran_close(int *, int *);
+#include "lsmr.h"
 #define UNUSED(x) (void)(x);
 
 void Aprod1 (int *m, int *n, double *x, double *y) {
