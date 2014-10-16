@@ -24,6 +24,7 @@
 
 module lsmrDataModule
 
+  use iso_c_binding
   implicit none
 
   public
@@ -34,11 +35,48 @@ module lsmrDataModule
 ! The above seems too obscure.
 
   integer(4),  parameter :: ip = 4
-  integer(4),  parameter :: sp = 4
+! integer(4),  parameter :: sp = 4
   integer(4),  parameter :: dp = 8
-  integer(4),  parameter :: qp = 16
+! integer(4),  parameter :: qp = 16
 ! real(sp),    parameter :: spzero = 0.0_sp, spone = 1.0_sp
 ! real(dp),    parameter :: dpzero = 0.0_dp, dpone = 1.0_dp
 ! real(qp),    parameter :: qpzero = 0.0_qp, qpone = 1.0_qp
+
+contains
+  subroutine fortran_open( funit, output, status ) bind (c, name="fortran_open")
+    use iso_c_binding
+    implicit none
+    integer :: funit, status, i
+    character(len=1,kind=C_CHAR) :: output(10)
+    character(len=:), allocatable :: fname
+
+
+    do i = 1, 10
+      if (output(i) == C_NULL_CHAR) exit
+    enddo
+    allocate(character(len=i-1) :: fname)
+    fname = transfer(output(1:i-1), fname)
+
+    write(*,*) fname
+    open(funit, file = fname, status = 'UNKNOWN', ERR = 900)
+    status = 0
+    return
+900 continue
+    status = 1
+    return
+  end subroutine fortran_open
+
+  subroutine fortran_close( funit, status ) bind (c, name="fortran_close")
+    use iso_c_binding
+    implicit none
+    integer :: funit, status
+
+    close(funit, ERR = 900)
+    status = 0
+    return
+900 continue
+    status = 1
+    return
+  end subroutine fortran_close
 
 end module lsmrDataModule

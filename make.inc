@@ -6,7 +6,7 @@ FC      =  gfortran
 FFLAGS  = -O $(DEBUG)
 
 CC      =  gcc
-CFLAGS  = -O -Wall -Wextra $(DEBUG)
+CFLAGS  = -O -Wall -Wextra $(DEBUG) -lm
 
 .SUFFIXES:
 .SUFFIXES: .c .f .f90 .o

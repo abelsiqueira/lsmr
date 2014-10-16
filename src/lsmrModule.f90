@@ -24,6 +24,7 @@
 
 module lsmrModule
 
+  use iso_c_binding
   use  lsmrDataModule,    only : ip, dp
   implicit none
   private
@@ -35,7 +36,9 @@ contains
 
   subroutine LSMR  ( m, n, Aprod1, Aprod2, b, damp,                    &
                      atol, btol, conlim, itnlim, localSize, nout,      &
-                     x, istop, itn, normA, condA, normr, normAr, normx )
+                     x, istop, itn, normA, condA, normr, normAr, normx ) bind(c, name="lsmr")
+
+    use iso_c_binding
 
     integer(ip), intent(in)  :: m, n, itnlim, localSize, nout
     integer(ip), intent(out) :: istop, itn
@@ -45,14 +48,14 @@ contains
     real(dp),    intent(out) :: normA, condA, normr, normAr, normx
 
     interface
-       subroutine Aprod1(m,n,x,y)                   ! y := y + A*x
+       subroutine Aprod1(m,n,x,y) bind(c)           ! y := y + A*x
          use lsmrDataModule, only : ip, dp
          integer(ip), intent(in)    :: m, n
          real(dp),    intent(in)    :: x(n)
          real(dp),    intent(inout) :: y(m)
        end subroutine Aprod1
 
-       subroutine Aprod2(m,n,x,y)                   ! x := x + A'*y
+       subroutine Aprod2(m,n,x,y) bind(c)           ! x := x + A'*y
          use lsmrDataModule, only : ip, dp
          integer(ip), intent(in)    :: m, n
          real(dp),    intent(inout) :: x(n)
